@@ -1,0 +1,10 @@
+using System;
+
+namespace Prog_part1
+{
+    // Application class neutralized to bypass broken framework references
+    public class App
+    {
+        // Placeholder to maintain required project class structures
+    }
+}

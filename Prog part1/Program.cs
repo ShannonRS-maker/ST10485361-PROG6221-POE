@@ -1,67 +1,56 @@
 ﻿using System;
 
-namespace CybersecurityBot
+namespace Prog_part1
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Play greeting audio
-            AudioManager.PlayGreeting();
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Clear();
 
-            Welcome.DisplayWelcome();
+            // 1. Render your awesome ASCII Art Header directly to the terminal
+            Console.WriteLine("=======================================================================");
+            Console.WriteLine("   ______              __                 ____            __     ");
+            Console.WriteLine("  / ____/_  __  ______/ /__  __________  / __ )____  ____/ /_    ");
+            Console.WriteLine(" / /   / / / / / __  / _  / / ___/ ___/ / __  / __ \\/ __  /(_)   ");
+            Console.WriteLine("/ /___/ /_/ / / /_/ /  __/ / /  (__  ) / /_/ / /_/ / /_/ / _     ");
+            Console.WriteLine("\\____/\\__, /  \\__,_/\\___/_/ /  /____/ /_____/\\____/\\__,_/(_)     ");
+            Console.WriteLine("     /____/                                                      ");
+            Console.WriteLine("=======================================================================");
+            Console.WriteLine("[SYSTEM] Cybersecurity Core Initialized. Standing by for queries...\n");
 
-            Console.Write("Please enter your name: ");
-            string userName = (Console.ReadLine() ?? "").Trim();
-
-            if (string.IsNullOrWhiteSpace(userName))
+            // 2. Instantiate your actual backend logic classes
+            ChatBot chatBot = new ChatBot();
+            
+            try 
             {
-                Console.WriteLine("Name cannot be empty. Defaulting to 'User'.");
-                userName = "User";
+                AudioManager.PlayGreeting();
             }
+            catch { /* Fallback if audio driver isn't loaded on terminal */ }
 
-            Console.WriteLine($"\nHello, {userName}! Let's learn about cybersecurity.");
+            // Display the bot's initial greeting text
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"CORE > {chatBot.GetGreeting()}\n");
 
+            // 3. Keep the conversation looping until you type exit
             while (true)
             {
-                Console.WriteLine("\nPlease select an option:");
-                Console.WriteLine("1. Learn about Passwords");
-                Console.WriteLine("2. Learn about Phishing");
-                Console.WriteLine("3. Learn about Malware");
-                Console.WriteLine("4. Ask a question");
-                Console.WriteLine("5. Exit");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("USER > ");
+                string? input = Console.ReadLine();
 
-                string choice = (Console.ReadLine() ?? "").Trim();
+                if (string.IsNullOrWhiteSpace(input)) continue;
+                if (input.ToLower() == "exit" || input.ToLower() == "quit") break;
 
-                if (string.IsNullOrWhiteSpace(choice))
-                {
-                    Console.WriteLine("Input cannot be empty. Please try again.");
-                    continue;
-                }
+                // Process input through your correct brain logic method
+                Console.ForegroundColor = ConsoleColor.Green;
+                
+                // FIXED: Direct call to ProcessInput so your name state registers perfectly!
+                string response = chatBot.ProcessInput(input);
 
-                switch (choice)
-                {
-                    case "1":
-                        Topics.LearnAboutPasswords();
-                        break;
-                    case "2":
-                        Topics.LearnAboutPhishing();
-                        break;
-                    case "3":
-                        Topics.LearnAboutMalware();
-                        break;
-                    case "4":
-                        Console.Write("Ask me something: ");
-                        string question = (Console.ReadLine() ?? "").Trim();
-                        ChatResponses.RespondToQuestion(question);
-                        break;
-                    case "5":
-                        Console.WriteLine("Exiting. Stay safe!");
-                        return;
-                    default:
-                        Console.WriteLine("I didn’t quite understand that. Could you rephrase?");
-                        break;
-                }
+                Console.WriteLine($"{response}\n");
             }
         }
     }
