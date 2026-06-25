@@ -1,0 +1,97 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:Prog_part1"
+        x:Class="Prog_part1.MainWindow"
+        Title="Cybersecurity Awareness Dashboard"
+        Width="1050" 
+        Height="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#1C1C1E">
+
+    <Grid ColumnDefinitions="*, 340" Margin="15">
+        <TabControl Grid.Column="0" Background="#2C2C2E" CornerRadius="8" Padding="15">
+            
+            <TabItem Header="Task Assistant" FontSize="14" FontWeight="SemiBold">
+                <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="0,10,0,0">
+                    <TextBlock Grid.Row="0" Text="🛡️ Secure Task Planner" FontSize="18" FontWeight="Bold" Foreground="#34C759" Margin="0,0,0,15"/>
+                    <StackPanel Grid.Row="1" Margin="0,0,0,15">
+                        <Grid ColumnDefinitions="*, *">
+                            <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                <TextBlock Text="Task Title:" Foreground="#AEAEB2" FontSize="12" Margin="0,0,0,4"/>
+                                <TextBox Name="TxtTaskTitle" Watermark="e.g., Enable 2FA on GitHub" Height="32"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                <TextBlock Text="Reminder Timeframe:" Foreground="#AEAEB2" FontSize="12" Margin="0,0,0,4"/>
+                                <TextBox Name="TxtTaskReminder" Watermark="e.g., Remind me in 7 days" Height="32"/>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="Task Description:" Foreground="#AEAEB2" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Name="TxtTaskDesc" Watermark="Provide action details..." Height="50" AcceptsReturn="True" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Button Content="➕ Save Task to JSON" Background="#34C759" Foreground="White" HorizontalAlignment="Right" Padding="15,6" CornerRadius="4" Click="OnAddTaskClicked" Margin="0,10,0,0"/>
+                    </StackPanel>
+                    
+                    <ListBox Grid.Row="2" Name="LstTasks" Background="#1C1C1E" BorderThickness="1" BorderBrush="#3A3A3C" CornerRadius="6">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:CybersecurityTask">
+                                <Border BorderBrush="#3A3A3C" BorderThickness="0,0,0,1" Padding="10">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="#34C759" FontSize="14"/>
+                                            <TextBlock Text="{Binding Description}" Foreground="#FFFFFF" TextWrapping="Wrap" FontSize="12" Margin="0,4,0,4"/>
+                                            <TextBlock Text="{Binding Reminder, StringFormat='⏰ Reminder: {0}'}" Foreground="#FF9500" FontSize="11" IsVisible="{Binding Reminder, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                            <TextBlock Text="{Binding Status, StringFormat='Status: {0}'}" Foreground="#8E8E93" FontSize="11" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="✓ Done" Background="#2F3930" Foreground="#30D158" FontSize="12" CommandParameter="{Binding Id}" Click="OnCompleteTaskClicked" Margin="0,0,8,0"/>
+                                            <Button Content="🗑️ Delete" Background="#3A2223" Foreground="#FF453A" FontSize="12" CommandParameter="{Binding Id}" Click="OnDeleteTaskClicked"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+            
+            <TabItem Header="Cyber Quiz Game" FontSize="14" FontWeight="SemiBold">
+                <Grid RowDefinitions="Auto,*,Auto" Margin="0,10,0,0">
+                    <TextBlock Grid.Row="0" Text="🧠 Cyber Hygiene Assessment" FontSize="18" FontWeight="Bold" Foreground="#0A84FF" Margin="0,0,0,15"/>
+                    <Border Grid.Row="1" Background="#1C1C1E" BorderBrush="#3A3A3C" BorderThickness="1" CornerRadius="8" Padding="20">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <TextBlock Grid.Row="0" Name="TxtQuizProgress" Text="Question 1" Foreground="#0A84FF" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                                <TextBlock Name="TxtQuestionText" Text="Loading Assessment..." FontSize="15" Foreground="White" TextWrapping="Wrap" FontWeight="Medium" Margin="0,0,0,15"/>
+                                <StackPanel Name="PnlQuizOptions" />
+                            </StackPanel>
+                            <TextBlock Grid.Row="2" Name="TxtQuizFeedback" Text="" Foreground="#8E8E93" FontStyle="Italic" TextWrapping="Wrap" Margin="0,15,0,0" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Button Grid.Row="2" Name="BtnNextQuestion" Content="Next Question ➡️" Background="#0A84FF" Foreground="White" HorizontalAlignment="Right" Margin="0,15,0,0" Padding="15,8" IsEnabled="False" Click="OnNextQuestionClicked"/>
+                </Grid>
+            </TabItem>
+            
+            <TabItem Header="NLP ChatBot Core" FontSize="14" FontWeight="SemiBold">
+                <Grid RowDefinitions="Auto,*,Auto" Margin="0,10,0,0">
+                    <TextBlock Grid.Row="0" Text="🤖 Automated Assistant Node" FontSize="18" FontWeight="Bold" Foreground="#BF5AF2" Margin="0,0,0,15"/>
+                    <ListBox Grid.Row="1" Name="LstChatHistory" Background="#1C1C1E" BorderThickness="1" BorderBrush="#3A3A3C" CornerRadius="6" Margin="0,0,0,10"/>
+                    <Grid Grid.Row="2" ColumnDefinitions="*, Auto">
+                        <TextBox Name="TxtChatInput" 
+         Watermark="Ask a question or type 'add task'..."
+         KeyDown="OnChatInputKeyDown"/>
+                        <Button Grid.Column="1" Content="Send" Background="#BF5AF2" Foreground="White" Padding="15,0" Height="35" Click="OnSendChatClicked"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Column="1" Background="#2C2C2E" CornerRadius="8" Margin="15,0,0,0" Padding="15">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <TextBlock Grid.Row="0" Text="🛠️ LIVE SYSTEM LOG" FontSize="13" FontWeight="Bold" Foreground="#FFD60A" Margin="0,0,0,12"/>
+                <ListBox Grid.Row="1" Name="LstActivityLog" Background="#1C1C1E" BorderThickness="0" CornerRadius="6" FontSize="11" FontFamily="Courier New"/>
+                <Button Grid.Row="2" Content="📜 Show Full History" Background="#3A3A3C" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,10,0,0" Padding="8" Click="OnShowFullLogClicked"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
